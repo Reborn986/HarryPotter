@@ -18,11 +18,12 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
 )
-
+qt_add_resources(RESOURCE_FILES res.qrc)#关键修改
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(HarryPotter
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${RESOURCE_FILES}#关键修改
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET HarryPotter APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -32,6 +33,7 @@ else()
     if(ANDROID)
         add_library(HarryPotter SHARED
             ${PROJECT_SOURCES}
+            ${RESOURCE_FILES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
