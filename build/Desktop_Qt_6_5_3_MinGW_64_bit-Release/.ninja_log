@@ -1,0 +1,12 @@
+# ninja log v6
+5	593	7705685837359031	HarryPotter_autogen/timestamp	d70a920da9236dcd
+5	593	7705685837359031	HarryPotter_autogen/mocs_compilation.cpp	d70a920da9236dcd
+5	593	7705685837359031	G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Release/HarryPotter_autogen/timestamp	d70a920da9236dcd
+5	593	7705685837359031	G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Release/HarryPotter_autogen/mocs_compilation.cpp	d70a920da9236dcd
+596	1053	7705685842603683	qrc_res.cpp	df599344efa146a5
+596	1053	7705685842603683	G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Release/qrc_res.cpp	df599344efa146a5
+1053	2356	7705685843009297	CMakeFiles/HarryPotter.dir/HarryPotter_autogen/mocs_compilation.cpp.obj	39cd6beae7443194
+1063	2380	7705685843104515	CMakeFiles/HarryPotter.dir/main.cpp.obj	c9d0808f7816e2e2
+1073	3792	7705685843204667	CMakeFiles/HarryPotter.dir/mainwindow.cpp.obj	cb9e67f36652a8fa
+1083	5834	7705685843313546	CMakeFiles/HarryPotter.dir/qrc_res.cpp.obj	334b926032a5ba55
+5834	6117	7705685890822001	HarryPotter.exe	a9235d7cadbbc2bd

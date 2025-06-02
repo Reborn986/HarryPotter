@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-3b7dec74e2df5c307404.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "HarryPotter",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "HarryPotter::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-HarryPotter-Release-51ea400558f0753ca775.json",
+					"name" : "HarryPotter",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "HarryPotter_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-HarryPotter_autogen-Release-de2940a6d15a058671ef.json",
+					"name" : "HarryPotter_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "HarryPotter_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-HarryPotter_autogen_timestamp_deps-Release-32ed1204bcf87701d4d7.json",
+					"name" : "HarryPotter_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Release",
+		"source" : "G:/HarryPotter/HarryPotter"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
