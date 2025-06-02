@@ -32,6 +32,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 void MainWindow::loadAllBooks(){
+    QMap<QString, QString> aliasToOriginalFilenameMap;
+    aliasToOriginalFilenameMap.insert(":/lushuyun_hp0_prequel.txt", "Harry Potter Prequel.txt");
+    aliasToOriginalFilenameMap.insert(":/lushuyun_hp2_chamber_secrets.txt", "Harry_Potter_and_the_Chamber_of_Secrets_Book_2");
+    aliasToOriginalFilenameMap.insert(":/lushuyun_hp7_deathly_hallows.txt","Harry_Potter_and_the_Deathly_Hallows_Book_7");
+    aliasToOriginalFilenameMap.insert(":/lushuyun_hp3_prisoner_azkaban.txt","Harry Potter and the Prisoner of Azkaban");
+    aliasToOriginalFilenameMap.insert(":/lushuyun_hp4_goblet_fire.txt","Harry Potter and the Goblet of Fire");
+    aliasToOriginalFilenameMap.insert(":/lushuyun_hp6_half_blood_prince.txt","Harry Potter and the Half-Blood Prince");
+    aliasToOriginalFilenameMap.insert(":/lushuyun_quidditch_ages.txt","Quidditch Through the Ages");
+    aliasToOriginalFilenameMap.insert(":/lushuyun_tales_beedle_bard.txt","The Tales of Beedle the Bard");
+
     QStringList bookResources = {//路径以:/开头是Qt资源的写法，这里用的就是我在res里面写的别名了
         ":/lushuyun_hp0_prequel.txt",
         ":/lushuyun_hp2_chamber_secrets.txt",
@@ -48,7 +58,7 @@ void MainWindow::loadAllBooks(){
             QTextStream stream(&file);//创建QTextStream对象，和文件关联
             stream.setEncoding(QStringConverter::Utf8);//为了防止乱码，设置编码为UTF-8，正确处理国际字符
             QString content = stream.readAll();//用readALL()读取整个文件内容到字符串
-            QString bookName = resourcePath.mid(2);//因为存储只是提取书名，把:/前缀要去掉
+            QString bookName = aliasToOriginalFilenameMap.value(resourcePath);
             bookMap[bookName] = content;//把书名和内容作为键-对的形式存在哈希表中
             file.close();//关闭文件
         }
@@ -101,33 +111,25 @@ void MainWindow::on_resultsList_itemClicked(QListWidgetItem *item)//显示结果
 }
 int MainWindow::findChapter(const QString &content, int position)
 {
-    // Simple chapter detection - look for "Chapter" before the position
-    QRegularExpression chapterRegex("Chapter\\s+(\\d+)", QRegularExpression::CaseInsensitiveOption);
-    int chapter = 1; // Default chapter
-    
+    QRegularExpression chapterRegex("Chapter\\s+(\\d+)", QRegularExpression::CaseInsensitiveOption);//初始化正则表达式，和上面统一；匹配模式：Chapter + 1个或多个空白字符（\\s+） + 数字（(\\d+)），并且case这个方法是忽略大小写的意思
+    int chapter = 1; //默认值（没匹配到任何章节的时候就返回这个）
     int searchPos = 0;
-    QRegularExpressionMatchIterator matches = chapterRegex.globalMatch(content);
+    QRegularExpressionMatchIterator matches = chapterRegex.globalMatch(content);//globalMatch是遍历文本正则表达式用的
     while (matches.hasNext()) {
         QRegularExpressionMatch match = matches.next();
-        int matchPos = match.capturedStart();
-        
+        int matchPos = match.capturedStart();//匹配起始的位置
         if (matchPos > position) {
-            break;
+            break;//要是匹配的位置超过目标位置匹配就终止
         }
-        
-        chapter = match.captured(1).toInt();
+        chapter = match.captured(1).toInt();//更新匹配的数字
     }
-    
     return chapter;
 }
-
 int MainWindow::findPage(const QString &content, int position)
 {
-    // Approximate page calculation (assuming ~3000 characters per page)
     const int CHARS_PER_PAGE = 3000;
     return (position / CHARS_PER_PAGE) + 1;
 }
-
 QString MainWindow::getContext(const QString &content, int position, int contextSize)
 {
     // Get text surrounding the keyword
