@@ -1,11 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
-#include <QMainWindow>
-#include <QMap>
+#include <QMainWindow> //在qt里面开发时，为了和一般c++库区分，方便编译或者调用信号与槽的功能，所以要加Q
+#include <QMap>//在存储书籍的时候用到了这个，实现存储和管理的键对映射
 #include <QString>
-#include <QListWidgetItem>
-
+#include <QListWidgetItem>//和信号槽有关的，点击链表的某一选项时，知道是啥被点击了
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -23,7 +21,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);//构造函数，初始化UI，加载书籍，连接信号与槽
     ~MainWindow();
     void loadAllBooks();
 private slots:
@@ -33,9 +31,8 @@ private:
     Ui::MainWindow *ui;
     QMap<QString, QString> bookMap;
     QList<SearchResult> searchResults;
-    
     int findChapter(const QString &content, int position);
     int findPage(const QString &content, int position);
     QString getContext(const QString &content, int position, int contextSize = 200);
 };
-#endif // MAINWINDOW_H
+#endif

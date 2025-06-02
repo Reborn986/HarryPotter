@@ -20,10 +20,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 void MainWindow::loadAllBooks(){
-    // Load books from resource files instead of directory
-    QStringList bookResources = {
+    QStringList bookResources = {//路径以:/开头是Qt资源的写法，这里用的就是我在res里面写的别名了
         ":/lushuyun_hp0_prequel.txt",
         ":/lushuyun_hp2_chamber_secrets.txt",
         ":/lushuyun_hp3_prisoner_azkaban.txt",
@@ -32,17 +30,16 @@ void MainWindow::loadAllBooks(){
         ":/lushuyun_hp7_deathly_hallows.txt",
         ":/lushuyun_quidditch_ages.txt",
         ":/lushuyun_tales_beedle_bard.txt"
-    };
-    
-    foreach (QString resourcePath, bookResources) {
-        QFile file(resourcePath);
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            QTextStream stream(&file);
-            stream.setEncoding(QStringConverter::Utf8);
-            QString content = stream.readAll();
-            QString bookName = resourcePath.mid(2); // Remove ":/" prefix
-            bookMap[bookName] = content;
-            file.close();
+    };//创建一个字符串列表，和python的列表类似但是写法不一样
+    for (QString resourcePath: bookResources) {//for遍历资源路径
+        QFile file(resourcePath);//为每一个路径创建一个QFile对象
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {//文件用只读的方式打开
+            QTextStream stream(&file);//创建QTextStream对象，和文件关联
+            stream.setEncoding(QStringConverter::Utf8);//为了防止乱码，设置编码为UTF-8，正确处理国际字符
+            QString content = stream.readAll();//用readALL()读取整个文件内容到字符串
+            QString bookName = resourcePath.mid(2);//因为存储只是提取书名，把:/前缀要去掉
+            bookMap[bookName] = content;//把书名和内容作为键-对的形式存在哈希表中
+            file.close();//关闭文件
         }
     }
 }
