@@ -11,7 +11,6 @@ namespace Ui {
 class MainWindow;
 }
 QT_END_NAMESPACE
-
 struct SearchResult {
     QString bookName;
     QString keyword;
@@ -20,20 +19,16 @@ struct SearchResult {
     int position;
     QString context;
 };
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void loadAllBooks();
-
 private slots:
     void on_searchButton_clicked();
     void on_resultsList_itemClicked(QListWidgetItem *item);
-
 private:
     Ui::MainWindow *ui;
     QMap<QString, QString> bookMap;

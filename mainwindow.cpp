@@ -7,19 +7,15 @@
 #include <QCoreApplication>
 #include <QRegularExpression>
 #include <QDebug>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow)//初始化UI
 {
     ui->setupUi(this);
     loadAllBooks();
-    
-    // Connect signals and slots
-    connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::on_searchButton_clicked);
+    connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::on_searchButton_clicked);//把信号和槽连接起来，有点类似AndroidStudio的intent跳转
     connect(ui->resultsList, &QListWidget::itemClicked, this, &MainWindow::on_resultsList_itemClicked);
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -28,14 +24,14 @@ MainWindow::~MainWindow()
 void MainWindow::loadAllBooks(){
     // Load books from resource files instead of directory
     QStringList bookResources = {
-        ":/hp0_prequel.txt",
-        ":/hp2_chamber_secrets.txt",
-        ":/hp3_prisoner_azkaban.txt",
-        ":/hp4_goblet_fire.txt",
-        ":/hp6_half_blood_prince.txt",
-        ":/hp7_deathly_hallows.txt",
-        ":/quidditch_ages.txt",
-        ":/tales_beedle_bard.txt"
+        ":/lushuyun_hp0_prequel.txt",
+        ":/lushuyun_hp2_chamber_secrets.txt",
+        ":/lushuyun_hp3_prisoner_azkaban.txt",
+        ":/lushuyun_hp4_goblet_fire.txt",
+        ":/lushuyun_hp6_half_blood_prince.txt",
+        ":/lushuyun_hp7_deathly_hallows.txt",
+        ":/lushuyun_quidditch_ages.txt",
+        ":/lushuyun_tales_beedle_bard.txt"
     };
     
     foreach (QString resourcePath, bookResources) {
