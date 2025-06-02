@@ -69,35 +69,46 @@ void MainWindow::on_searchButton_clicked()
     QString keyword = ui->searchInput->text().trimmed();
     if (keyword.isEmpty()) {
         return;
-    }//获取、然后清理用户输入的关键词
+    }
     searchResults.clear();
-    ui->resultsList->clear();//清空之前的搜索结果
-    QRegularExpression regex("\\b" + QRegularExpression::escape(keyword) + "\\b", //创建正则表达式，这来用于搜索完整单词匹配
+    ui->resultsList->clear();
+    QRegularExpression regex("\\b" + QRegularExpression::escape(keyword) + "\\b", 
                             QRegularExpression::CaseInsensitiveOption);
+    QStringList orderedBooks = {// 创建一个有序的书籍列表，按照哈利波特系列的正确顺序
+        "Harry Potter Prequel.txt",                          // 前传 (HP0)
+        "Harry_Potter_and_the_Chamber_of_Secrets_Book_2",    // 密室 (HP2)
+        "Harry Potter and the Prisoner of Azkaban",          // 阿兹卡班 (HP3)
+        "Harry Potter and the Goblet of Fire",               // 火焰杯 (HP4)
+        "Harry Potter and the Half-Blood Prince",            // 混血王子 (HP6)
+        "Harry_Potter_and_the_Deathly_Hallows_Book_7",       // 死亡圣器 (HP7)
+        "Quidditch Through the Ages",                        // 衍生作品
+        "The Tales of Beedle the Bard"                       // 衍生作品
+    };
+    ui->resultsList->addItem(QString("序号    人名/地名              页码         章节         书名"));  // 添加标题行 - 使用正确的arg数量
     int resultIndex = 1;
-    for (auto it = bookMap.begin(); it != bookMap.end(); ++it) {//遍历加载所有的书籍
-        QString bookName = it.key();
-        QString content = it.value();
-        QRegularExpressionMatchIterator matches = regex.globalMatch(content);//在当前这一本书籍下查找所有的匹配项
+    for (const QString &bookName : orderedBooks) { // 按照有序列表的顺序处理书籍
+        if (!bookMap.contains(bookName)) continue;
+        QString content = bookMap[bookName];
+        QRegularExpressionMatchIterator matches = regex.globalMatch(content);
         while (matches.hasNext()) {
             QRegularExpressionMatch match = matches.next();
             int position = match.capturedStart(); 
-            SearchResult result;//为每一个匹配都创建一个结果对象
-            result.bookName = bookName;//书的名称
-            result.keyword = keyword;//关键词
-            result.position = position;//位置
-            result.page = findPage(content, position);//哪一页
-            result.chapter = findChapter(content, position);//哪一章
-            result.context = getContext(content, position);//内容是啥
-            searchResults.append(result);//把这些结果添加到列表里面
-            QString displayText = QString("%1\t%2\t%3\t%4\t%5")//在UI里面显示结果
+            SearchResult result;
+            result.bookName = bookName;
+            result.keyword = keyword;
+            result.position = position;
+            result.page = findPage(content, position);
+            result.chapter = findChapter(content, position);
+            result.context = getContext(content, position);
+            searchResults.append(result);
+            QString displayText = QString("%1    %2              %3         %4         %5")
                                 .arg(resultIndex)
                                 .arg(keyword)
                                 .arg(result.page)
                                 .arg(result.chapter)
                                 .arg(bookName);
             ui->resultsList->addItem(displayText);
-            resultIndex++;//开始下一本书的搜索了
+            resultIndex++;
         }
     }
 }
