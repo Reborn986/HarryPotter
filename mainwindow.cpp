@@ -9,12 +9,23 @@
 #include <QDebug>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)//初始化UI
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     loadAllBooks();
-    connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::on_searchButton_clicked);//把信号和槽连接起来，有点类似AndroidStudio的intent跳转
-    connect(ui->resultsList, &QListWidget::itemClicked, this, &MainWindow::on_resultsList_itemClicked);
+    this->setWindowTitle("C++程序设计实践&路舒匀&哈利波特书籍搜索");// 设置窗口标题
+    this->setStyleSheet("MainWindow { background-image: url(:/background.jpg); background-position: center; background-repeat: no-repeat; background-size: cover; }");//设置背景图片
+
+    QString transparentStyle = "background-color: rgba(255, 255, 255, 150); border-radius: 10px; padding: 5px;";// 设置半透明效果的搜索区域
+    ui->searchInput->setStyleSheet("QLineEdit { " + transparentStyle + " font-size: 14px; color: #333; }");
+    ui->searchButton->setStyleSheet("QPushButton { background-color: rgba(142, 68, 173, 200); color: white; border-radius: 15px; font-weight: bold; padding: 8px; }"
+                                   "QPushButton:hover { background-color: rgba(155, 89, 182, 200); }"
+                                   "QPushButton:pressed { background-color: rgba(125, 60, 152, 200); }");//把按钮的颜色设一下
+    ui->resultsList->setStyleSheet("QListWidget { " + transparentStyle + " }");
+    ui->contextDisplay->setStyleSheet("QTextEdit { " + transparentStyle + " }");
+    ui->searchButton->setText("搜索"); // 修改按钮文本
+    connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::on_searchButton_clicked);
+    connect(ui->resultsList, &QListWidget::itemClicked, this, &MainWindow::on_resultsList_itemClicked);//信号槽的连接
 }
 MainWindow::~MainWindow()
 {
@@ -43,56 +54,44 @@ void MainWindow::loadAllBooks(){
         }
     }
 }
-
 void MainWindow::on_searchButton_clicked()
 {
     QString keyword = ui->searchInput->text().trimmed();
     if (keyword.isEmpty()) {
         return;
-    }
-    
+    }//获取、然后清理用户输入的关键词
     searchResults.clear();
-    ui->resultsList->clear();
-    
-    // Search for the keyword in all books
-    QRegularExpression regex("\\b" + QRegularExpression::escape(keyword) + "\\b", 
+    ui->resultsList->clear();//清空之前的搜索结果
+    QRegularExpression regex("\\b" + QRegularExpression::escape(keyword) + "\\b", //创建正则表达式，这来用于搜索完整单词匹配
                             QRegularExpression::CaseInsensitiveOption);
-    
     int resultIndex = 1;
-    for (auto it = bookMap.begin(); it != bookMap.end(); ++it) {
+    for (auto it = bookMap.begin(); it != bookMap.end(); ++it) {//遍历加载所有的书籍
         QString bookName = it.key();
         QString content = it.value();
-        
-        QRegularExpressionMatchIterator matches = regex.globalMatch(content);
+        QRegularExpressionMatchIterator matches = regex.globalMatch(content);//在当前这一本书籍下查找所有的匹配项
         while (matches.hasNext()) {
             QRegularExpressionMatch match = matches.next();
-            int position = match.capturedStart();
-            
-            SearchResult result;
-            result.bookName = bookName;
-            result.keyword = keyword;
-            result.position = position;
-            result.page = findPage(content, position);
-            result.chapter = findChapter(content, position);
-            result.context = getContext(content, position);
-            
-            searchResults.append(result);
-            
-            // Add to list widget
-            QString displayText = QString("%1\t%2\t%3\t%4\t%5")
+            int position = match.capturedStart(); 
+            SearchResult result;//为每一个匹配都创建一个结果对象
+            result.bookName = bookName;//书的名称
+            result.keyword = keyword;//关键词
+            result.position = position;//位置
+            result.page = findPage(content, position);//哪一页
+            result.chapter = findChapter(content, position);//哪一章
+            result.context = getContext(content, position);//内容是啥
+            searchResults.append(result);//把这些结果添加到列表里面
+            QString displayText = QString("%1\t%2\t%3\t%4\t%5")//在UI里面显示结果
                                 .arg(resultIndex)
                                 .arg(keyword)
                                 .arg(result.page)
                                 .arg(result.chapter)
                                 .arg(bookName);
             ui->resultsList->addItem(displayText);
-            
-            resultIndex++;
+            resultIndex++;//开始下一本书的搜索了
         }
     }
 }
-
-void MainWindow::on_resultsList_itemClicked(QListWidgetItem *item)
+void MainWindow::on_resultsList_itemClicked(QListWidgetItem *item)//显示结果
 {
     int index = ui->resultsList->row(item);
     if (index >= 0 && index < searchResults.size()) {
@@ -100,7 +99,6 @@ void MainWindow::on_resultsList_itemClicked(QListWidgetItem *item)
         ui->contextDisplay->setText(result.context);
     }
 }
-
 int MainWindow::findChapter(const QString &content, int position)
 {
     // Simple chapter detection - look for "Chapter" before the position

@@ -9,5 +9,7 @@
         <file alias="lushuyun_hp6_half_blood_prince.txt">books/J.K. Rowling - HP 6 - Harry Potter and the Half-Blood Prince.txt</file>
         <file alias="lushuyun_quidditch_ages.txt">books/J.K. Rowling - Quidditch Through the Ages.txt</file>
         <file alias="lushuyun_tales_beedle_bard.txt">books/J.K. Rowling - The Tales of Beedle the Bard.txt</file>
+        <file alias="background.jpg">images/hp_background.jpg</file>
+        <file alias="word.jpg">images/hp_word.jpg</file>
     </qresource>
 </RCC>

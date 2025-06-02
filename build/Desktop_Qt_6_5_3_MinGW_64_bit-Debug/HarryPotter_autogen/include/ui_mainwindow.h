@@ -69,8 +69,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        searchInput->setText(QCoreApplication::translate("MainWindow", "searchInput", nullptr));
-        searchButton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
+        searchInput->setText(QCoreApplication::translate("MainWindow", "\350\257\267\345\234\250\350\277\231\351\207\214\350\276\223\345\205\245\344\272\272\345\220\215\346\210\226\350\200\205\345\234\260\345\220\215......", nullptr));
+        searchButton->setText(QCoreApplication::translate("MainWindow", "\346\220\234\347\264\242", nullptr));
     } // retranslateUi
 
 };
