@@ -47,7 +47,9 @@ HarryPotter_autogen/timestamp: \
 	G:/HarryPotter/HarryPotter/mainwindow.cpp \
 	G:/HarryPotter/HarryPotter/mainwindow.h \
 	G:/HarryPotter/HarryPotter/res.qrc \
+	H:/Qt/6.5.3/mingw_64/include/QtCore/QHash \
 	H:/Qt/6.5.3/mingw_64/include/QtCore/QMap \
+	H:/Qt/6.5.3/mingw_64/include/QtCore/QSet \
 	H:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 	H:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
 	H:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \

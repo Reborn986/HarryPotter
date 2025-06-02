@@ -1,6 +1,8 @@
 G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/HarryPotter_autogen/EWIEGA46WW/moc_mainwindow.cpp: G:/HarryPotter/HarryPotter/mainwindow.h \
   G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/HarryPotter_autogen/moc_predefs.h \
+  H:/Qt/6.5.3/mingw_64/include/QtCore/QHash \
   H:/Qt/6.5.3/mingw_64/include/QtCore/QMap \
+  H:/Qt/6.5.3/mingw_64/include/QtCore/QSet \
   H:/Qt/6.5.3/mingw_64/include/QtCore/QString \
   H:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
   H:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
