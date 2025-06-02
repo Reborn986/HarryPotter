@@ -6,6 +6,8 @@
 #include <QListWidgetItem>//和信号槽有关的，点击链表的某一选项时，知道是啥被点击了
 #include <QHash>
 #include <QSet>
+#include <QVector>
+#include <algorithm>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -26,7 +28,6 @@ public:
     MainWindow(QWidget *parent = nullptr);//构造函数，初始化UI，加载书籍，连接信号与槽
     ~MainWindow();
     void loadAllBooks();
-
 private slots:
     void on_searchButton_clicked();
     void on_resultsList_itemClicked(QListWidgetItem *item);
@@ -34,7 +35,7 @@ private:
     Ui::MainWindow *ui;
     QMap<QString, QString> bookMap;
     QList<SearchResult> searchResults;
-    QList<int> boyerMooreSearch(const QString &text, const QString &pattern, bool caseSensitive = true);  // 新添加的Boyer-Moore搜索函数
+    QList<int> boyerMooreSearch(const QString &text, const QString &pattern, bool caseSensitive = true); // Boyer-Moore搜索函数
     int findChapter(const QString &content, int position);
     int findPage(const QString &content, int position);
     QString getContext(const QString &content, int position, int contextSize = 200);

@@ -7,7 +7,6 @@
 #include <QCoreApplication>
 #include <QRegularExpression>
 #include <QDebug>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -28,12 +27,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::on_searchButton_clicked);
     connect(ui->resultsList, &QListWidget::itemClicked, this, &MainWindow::on_resultsList_itemClicked);//信号槽的连接
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 void MainWindow::loadAllBooks(){
     QMap<QString, QString> aliasToOriginalFilenameMap;
     aliasToOriginalFilenameMap.insert(":/lushuyun_hp0_prequel.txt", "Harry Potter Prequel.txt");
@@ -44,7 +41,6 @@ void MainWindow::loadAllBooks(){
     aliasToOriginalFilenameMap.insert(":/lushuyun_hp6_half_blood_prince.txt","Harry Potter and the Half-Blood Prince");
     aliasToOriginalFilenameMap.insert(":/lushuyun_quidditch_ages.txt","Quidditch Through the Ages");
     aliasToOriginalFilenameMap.insert(":/lushuyun_tales_beedle_bard.txt","The Tales of Beedle the Bard");
-
     QStringList bookResources = {//路径以:/开头是Qt资源的写法，这里用的就是我在res里面写的别名了
         ":/lushuyun_hp0_prequel.txt",
         ":/lushuyun_hp2_chamber_secrets.txt",
@@ -67,53 +63,53 @@ void MainWindow::loadAllBooks(){
         }
     }
 }
-
-// 实现简化版Boyer-Moore算法进行字符串搜索
-QList<int> MainWindow::boyerMooreSearch(const QString &text, const QString &pattern, bool caseSensitive)
+QList<int> MainWindow::boyerMooreSearch(const QString &text, const QString &pattern, bool caseSensitive)// 实现高效的Boyer-Moore算法进行字符串搜索
 {
-    QList<int> matches;
-    if (pattern.isEmpty() || text.isEmpty()) {
-        return matches;
+    QList<int> matches;//首先，存储匹配位置的列表
+    if (pattern.isEmpty() || text.isEmpty()) {//为了防止崩溃，先处理空字符串情况
+        return matches;//如果模式或文本为空，直接返回空列表
     }
-
-    QString searchText = caseSensitive ? text : text.toLower();
+    QString searchText = caseSensitive ? text : text.toLower();//根据是否区分大小写处理文本和模式
     QString searchPattern = caseSensitive ? pattern : pattern.toLower();
-
-    int textLen = searchText.length();
-    int patternLen = searchPattern.length();
-
-    if (patternLen > textLen) {
+    int textLen = searchText.length();//文本长度
+    int patternLen = searchPattern.length();//模式长度
+    if (patternLen > textLen) {//如果模式比文本长，不可能有匹配
         return matches;
     }
-
-    // 使用简单的暴力搜索算法（更可靠）
-    for (int i = 0; i <= textLen - patternLen; i++) {
-        bool found = true;
-        for (int j = 0; j < patternLen; j++) {
-            if (searchText[i + j] != searchPattern[j]) {
-                found = false;
-                break;
-            }
+    QHash<QChar, int> badCharTable;//构建坏字符表，这个表记录每个字符在模式中最后出现的位置
+    for (int i = 0; i < patternLen; i++) {
+        badCharTable[searchPattern[i]] = i;
+    }
+    int shift = 0;//当前在文本中的对齐位置
+    while (shift <= textLen - patternLen) {//主搜索循环
+        int j = patternLen - 1;//从模式末尾开始比较
+        while (j >= 0 && shift + j < textLen && searchPattern[j] == searchText[shift + j]) {//从右向左匹配
+            j--;//字符匹配，继续比较前一个字符
         }
-        if (found) {
-            matches.append(i);
+        if (j < 0) {
+            matches.append(shift);//找到完全匹配
+            shift += 1;//简单移动一位继续搜索
+        } else {//不匹配时使用坏字符启发式，计算移动距离
+            int badCharShift = 1;//默认移动1位
+            if (shift + j < textLen) {//确保不匹配字符在文本范围内
+                QChar mismatchChar = searchText[shift + j];//不匹配的字符
+                int lastOccurrence = badCharTable.value(mismatchChar, -1);
+                badCharShift = qMax(1, j - lastOccurrence);//计算移动距离，将模式中该字符的最后出现位置对齐到当前不匹配位置，确保至少移动1位
+            }
+            shift += badCharShift;//应用移动距离
         }
     }
-
-    return matches;
+    return matches;//返回所有匹配位置
 }
-
 void MainWindow::on_searchButton_clicked()
 {
     QString keyword = ui->searchInput->text().trimmed();
     if (keyword.isEmpty()) {
         return;
     }
-
     searchResults.clear();
     ui->resultsList->clear();
-
-    // 创建一个有序的书籍列表，按照哈利波特系列的正确顺序
+    //创建一个有序的书籍列表，按照哈利波特系列的正确顺序
     QStringList orderedBooks = {
         "Harry Potter Prequel.txt",                          // 前传 (HP0)
         "Harry_Potter_and_the_Chamber_of_Secrets_Book_2",    // 密室 (HP2)
@@ -132,20 +128,12 @@ void MainWindow::on_searchButton_clicked()
     for (const QString &bookName : orderedBooks) {
         if (!bookMap.contains(bookName)) continue;
         QString content = bookMap[bookName];
-
-        // 搜索精确匹配
-        QList<int> exactMatches = boyerMooreSearch(content, keyword, false);
-
-        // 搜索带所有格的匹配 (如 Harry's)
-        QString possessiveKeyword = keyword + "'s";
+        QList<int> exactMatches = boyerMooreSearch(content, keyword, false);//搜索精确匹配
+        QString possessiveKeyword = keyword + "'s";//搜索带所有格的匹配 (如 Harry's)
         QList<int> possessiveMatches = boyerMooreSearch(content, possessiveKeyword, false);
-
-        // 搜索带右单引号的所有格 (如 Harry's - 智能引号)
-        QString smartPossessiveKeyword = keyword + "'s";
+        QString smartPossessiveKeyword = keyword + "'s";//搜索带右单引号的所有格 (如 Harry's - 智能引号)
         QList<int> smartPossessiveMatches = boyerMooreSearch(content, smartPossessiveKeyword, false);
-
-        // 合并所有匹配结果
-        QSet<int> allMatches;
+        QSet<int> allMatches;//合并所有匹配结果
         for (int pos : exactMatches) {
             allMatches.insert(pos);
         }
@@ -155,13 +143,9 @@ void MainWindow::on_searchButton_clicked()
         for (int pos : smartPossessiveMatches) {
             allMatches.insert(pos);
         }
-
-        // 将匹配位置转换为有序列表
-        QList<int> sortedMatches = allMatches.values();
+        QList<int> sortedMatches = allMatches.values();//将匹配位置转换为有序列表
         std::sort(sortedMatches.begin(), sortedMatches.end());
-
-        // 为每个匹配创建搜索结果
-        for (int position : sortedMatches) {
+        for (int position : sortedMatches) {//为每个匹配创建搜索结果
             SearchResult result;
             result.bookName = bookName;
             result.keyword = keyword;
@@ -170,7 +154,6 @@ void MainWindow::on_searchButton_clicked()
             result.chapter = findChapter(content, position);
             result.context = getContext(content, position);
             searchResults.append(result);
-
             QString displayText = QString("%1    %2              %3         %4         %5")
                                       .arg(resultIndex)
                                       .arg(keyword)
@@ -182,16 +165,14 @@ void MainWindow::on_searchButton_clicked()
         }
     }
 }
-
 void MainWindow::on_resultsList_itemClicked(QListWidgetItem *item)//显示结果
 {
     int index = ui->resultsList->row(item);
-    if (index > 0 && (index - 1) < searchResults.size()) { // 跳过标题行
+    if (index > 0 && (index - 1) < searchResults.size()) {//跳过标题行
         SearchResult result = searchResults.at(index - 1);
         ui->contextDisplay->setText(result.context);
     }
 }
-
 int MainWindow::findChapter(const QString &content, int position)
 {
     QRegularExpression chapterRegex("Chapter\\s+(\\d+)", QRegularExpression::CaseInsensitiveOption);//初始化正则表达式，和上面统一；匹配模式：Chapter + 1个或多个空白字符（\\s+） + 数字（(\\d+)），并且case这个方法是忽略大小写的意思
@@ -207,29 +188,21 @@ int MainWindow::findChapter(const QString &content, int position)
     }
     return chapter;
 }
-
 int MainWindow::findPage(const QString &content, int position)
 {
     const int CHARS_PER_PAGE = 3000;
     return (position / CHARS_PER_PAGE) + 1;
 }
-
-QString MainWindow::getContext(const QString &content, int position, int contextSize)
+QString MainWindow::getContext(const QString &content, int position, int contextSize)//lsy是路舒匀的缩写，代码防伪标识
 {
-    // 找到包含关键词的段落起始位置
-    int lsy_paragraphStart = content.lastIndexOf("\n", position);
+    int lsy_paragraphStart = content.lastIndexOf("\n", position);//找到包含关键词的段落起始位置
     if (lsy_paragraphStart == -1)
         lsy_paragraphStart = 0;
     else
-        lsy_paragraphStart += 1; // 跳过换行符
-
-    // 找到段落结束位置
-    int lsy_paragraphEnd = content.indexOf("\n", position);
+        lsy_paragraphStart += 1;//跳过换行符
+    int lsy_paragraphEnd = content.indexOf("\n", position);//找到段落结束位置
     if (lsy_paragraphEnd == -1)
         lsy_paragraphEnd = content.length();
-
-    // 提取包含关键词的段落
-    QString lsy_context = content.mid(lsy_paragraphStart, lsy_paragraphEnd - lsy_paragraphStart);
-
+    QString lsy_context = content.mid(lsy_paragraphStart, lsy_paragraphEnd - lsy_paragraphStart);//提取包含关键词的段落
     return lsy_context;
 }

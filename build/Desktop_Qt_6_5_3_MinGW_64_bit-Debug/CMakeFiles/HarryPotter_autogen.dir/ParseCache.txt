@@ -7,6 +7,7 @@ G:/HarryPotter/HarryPotter/mainwindow.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/QMap
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/QSet
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/QString
+ mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/QVector
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/qabstractitemmodel.h
@@ -117,6 +118,7 @@ G:/HarryPotter/HarryPotter/mainwindow.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/qutf8stringview.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/qvariant.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/qvarlengtharray.h
+ mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/qvector.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/qversiontagging.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtCore/qxptype_traits.h
  mdp:H:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h

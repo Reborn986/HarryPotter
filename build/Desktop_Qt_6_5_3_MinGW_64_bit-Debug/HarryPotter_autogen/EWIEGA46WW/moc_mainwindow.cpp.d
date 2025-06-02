@@ -4,6 +4,7 @@ G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/HarryPotter
   H:/Qt/6.5.3/mingw_64/include/QtCore/QMap \
   H:/Qt/6.5.3/mingw_64/include/QtCore/QSet \
   H:/Qt/6.5.3/mingw_64/include/QtCore/QString \
+  H:/Qt/6.5.3/mingw_64/include/QtCore/QVector \
   H:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
   H:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
   H:/Qt/6.5.3/mingw_64/include/QtCore/qabstractitemmodel.h \
@@ -114,6 +115,7 @@ G:/HarryPotter/HarryPotter/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/HarryPotter
   H:/Qt/6.5.3/mingw_64/include/QtCore/qutf8stringview.h \
   H:/Qt/6.5.3/mingw_64/include/QtCore/qvariant.h \
   H:/Qt/6.5.3/mingw_64/include/QtCore/qvarlengtharray.h \
+  H:/Qt/6.5.3/mingw_64/include/QtCore/qvector.h \
   H:/Qt/6.5.3/mingw_64/include/QtCore/qversiontagging.h \
   H:/Qt/6.5.3/mingw_64/include/QtCore/qxptype_traits.h \
   H:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h \
