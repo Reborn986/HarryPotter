@@ -32,15 +32,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 void MainWindow::loadAllBooks(){
-    QMap<QString, QString> aliasToOriginalFilenameMap;
-    aliasToOriginalFilenameMap.insert(":/lushuyun_hp0_prequel.txt", "Harry Potter Prequel.txt");
-    aliasToOriginalFilenameMap.insert(":/lushuyun_hp2_chamber_secrets.txt", "Harry_Potter_and_the_Chamber_of_Secrets_Book_2");
-    aliasToOriginalFilenameMap.insert(":/lushuyun_hp7_deathly_hallows.txt","Harry_Potter_and_the_Deathly_Hallows_Book_7");
-    aliasToOriginalFilenameMap.insert(":/lushuyun_hp3_prisoner_azkaban.txt","Harry Potter and the Prisoner of Azkaban");
-    aliasToOriginalFilenameMap.insert(":/lushuyun_hp4_goblet_fire.txt","Harry Potter and the Goblet of Fire");
-    aliasToOriginalFilenameMap.insert(":/lushuyun_hp6_half_blood_prince.txt","Harry Potter and the Half-Blood Prince");
-    aliasToOriginalFilenameMap.insert(":/lushuyun_quidditch_ages.txt","Quidditch Through the Ages");
-    aliasToOriginalFilenameMap.insert(":/lushuyun_tales_beedle_bard.txt","The Tales of Beedle the Bard");
+    QMap<QString, QString> new_lsy_name;
+    new_lsy_name.insert(":/lushuyun_hp0_prequel.txt", "Harry Potter Prequel.txt");
+    new_lsy_name.insert(":/lushuyun_hp2_chamber_secrets.txt", "Harry_Potter_and_the_Chamber_of_Secrets_Book_2");
+    new_lsy_name.insert(":/lushuyun_hp7_deathly_hallows.txt","Harry_Potter_and_the_Deathly_Hallows_Book_7");
+    new_lsy_name.insert(":/lushuyun_hp3_prisoner_azkaban.txt","Harry Potter and the Prisoner of Azkaban");
+    new_lsy_name.insert(":/lushuyun_hp4_goblet_fire.txt","Harry Potter and the Goblet of Fire");
+    new_lsy_name.insert(":/lushuyun_hp6_half_blood_prince.txt","Harry Potter and the Half-Blood Prince");
+    new_lsy_name.insert(":/lushuyun_quidditch_ages.txt","Quidditch Through the Ages");
+    new_lsy_name.insert(":/lushuyun_tales_beedle_bard.txt","The Tales of Beedle the Bard");
     QStringList bookResources = {//路径以:/开头是Qt资源的写法，这里用的就是我在res里面写的别名了
         ":/lushuyun_hp0_prequel.txt",
         ":/lushuyun_hp2_chamber_secrets.txt",
@@ -57,28 +57,28 @@ void MainWindow::loadAllBooks(){
             QTextStream stream(&file);//创建QTextStream对象，和文件关联
             stream.setEncoding(QStringConverter::Utf8);//为了防止乱码，设置编码为UTF-8，正确处理国际字符
             QString content = stream.readAll();//用readALL()读取整个文件内容到字符串
-            QString bookName = aliasToOriginalFilenameMap.value(resourcePath);
+            QString bookName = new_lsy_name.value(resourcePath);
             bookMap[bookName] = content;//把书名和内容作为键-对的形式存在哈希表中
             file.close();//关闭文件
         }
     }
 }
-QList<int> MainWindow::boyerMooreSearch(const QString &text, const QString &pattern, bool caseSensitive)// 实现高效的Boyer-Moore算法进行字符串搜索
+QList<int> MainWindow::boyerMooreSearch(const QString &text, const QString &pattern, bool case_lsy)// 实现高效的Boyer-Moore算法进行字符串搜索
 {
     QList<int> matches;//首先，存储匹配位置的列表
     if (pattern.isEmpty() || text.isEmpty()) {//为了防止崩溃，先处理空字符串情况
         return matches;//如果模式或文本为空，直接返回空列表
     }
-    QString searchText = caseSensitive ? text : text.toLower();//根据是否区分大小写处理文本和模式
-    QString searchPattern = caseSensitive ? pattern : pattern.toLower();
+    QString searchText = case_lsy ? text : text.toLower();//根据是否区分大小写处理文本和模式
+    QString searchPattern = case_lsy ? pattern : pattern.toLower();
     int textLen = searchText.length();//文本长度
     int patternLen = searchPattern.length();//模式长度
     if (patternLen > textLen) {//如果模式比文本长，不可能有匹配
         return matches;
     }
-    QHash<QChar, int> badCharTable;//构建坏字符表，这个表记录每个字符在模式中最后出现的位置
+    QHash<QChar, int> bad_Table;//构建坏字符表，这个表记录每个字符在模式中最后出现的位置
     for (int i = 0; i < patternLen; i++) {
-        badCharTable[searchPattern[i]] = i;
+        bad_Table[searchPattern[i]] = i;
     }
     int shift = 0;//当前在文本中的对齐位置
     while (shift <= textLen - patternLen) {//主搜索循环
@@ -90,13 +90,13 @@ QList<int> MainWindow::boyerMooreSearch(const QString &text, const QString &patt
             matches.append(shift);//找到完全匹配
             shift += 1;//简单移动一位继续搜索
         } else {//不匹配时使用坏字符启发式，计算移动距离
-            int badCharShift = 1;//默认移动1位
+            int bad_shift = 1;//默认移动1位
             if (shift + j < textLen) {//确保不匹配字符在文本范围内
                 QChar mismatchChar = searchText[shift + j];//不匹配的字符
-                int lastOccurrence = badCharTable.value(mismatchChar, -1);
-                badCharShift = qMax(1, j - lastOccurrence);//计算移动距离，将模式中该字符的最后出现位置对齐到当前不匹配位置，确保至少移动1位
+                int lastOccurrence = bad_Table.value(mismatchChar, -1);
+                bad_shift = qMax(1, j - lastOccurrence);//计算移动距离，将模式中该字符的最后出现位置对齐到当前不匹配位置，确保至少移动1位
             }
-            shift += badCharShift;//应用移动距离
+            shift += bad_shift;//应用移动距离
         }
     }
     return matches;//返回所有匹配位置
@@ -132,7 +132,7 @@ void MainWindow::on_searchButton_clicked()
         QString possessiveKeyword = keyword + "'s";//搜索带所有格的匹配 (如 Harry's)
         QList<int> possessiveMatches = boyerMooreSearch(content, possessiveKeyword, false);
         QString smartPossessiveKeyword = keyword + "'s";//搜索带右单引号的所有格 (如 Harry's - 智能引号)
-        QList<int> smartPossessiveMatches = boyerMooreSearch(content, smartPossessiveKeyword, false);
+        QList<int> smartpossessiveMatches = boyerMooreSearch(content, smartPossessiveKeyword, false);
         QSet<int> allMatches;//合并所有匹配结果
         for (int pos : exactMatches) {
             allMatches.insert(pos);
@@ -140,7 +140,7 @@ void MainWindow::on_searchButton_clicked()
         for (int pos : possessiveMatches) {
             allMatches.insert(pos);
         }
-        for (int pos : smartPossessiveMatches) {
+        for (int pos : smartpossessiveMatches) {
             allMatches.insert(pos);
         }
         QList<int> sortedMatches = allMatches.values();//将匹配位置转换为有序列表

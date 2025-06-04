@@ -35,7 +35,7 @@ private:
     Ui::MainWindow *ui;
     QMap<QString, QString> bookMap;
     QList<SearchResult> searchResults;
-    QList<int> boyerMooreSearch(const QString &text, const QString &pattern, bool caseSensitive = true); // Boyer-Moore搜索函数
+    QList<int> boyerMooreSearch(const QString &text, const QString &pattern, bool case_lsy = true); // Boyer-Moore搜索函数
     int findChapter(const QString &content, int position);
     int findPage(const QString &content, int position);
     QString getContext(const QString &content, int position, int contextSize = 200);
